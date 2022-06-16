@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>주차장 모니터링 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='parkting_lot_style.css') }}"> <!-- css 파일 지정-->
+
+</head>
+<body>
+    <header>
+        <h1>주차장 모니터링 시스템</h1>
+    </header>
+    <hr>
+    <div class = "state">
+        <p  id = parking_lot_state><b>주차공간이 2자리 남았습니다.</b></p>
+        <div class="money">
+            <p  id = money_state>주차비용 : 0원</p>
+            <button  id = "free_btn"  class = button  onclick="free_money()">Free</button>
+        <div>
+        <p  id = time_state>주차시간 : 00분00초</p>
+    </div>
+   
+
+    <div class = "parking_lot_container">
+            <span class = "car_icon" id = 'car1'></span>
+            <span class = "car_icon" id = 'car2'></span>  
+    </div>
+
+
+  
+    <script>
+        
+        thread_state = false
+        distanse = 0
+        empty_space = 2
+        after_car_exist = false
+        before_car_exist = false
+
+        window.onload = function () {
+            fetch("/thread/start")
+            .then(response=> response.text())      
+            .then(data=> {
+                if(data=="thread start"){                                               
+                    thread_state= true;
+                }else{
+                    console.log("thread fail")
+                }
+            });      
+        }
+
+        time_flag = true
+        money = 0
+        ten_seconds_count = 0
+        function time_rasie(){
+                      time_set = 0;
+                        var time_start  =  setInterval(function() {
+                        if (time_flag == true){
+                            min = parseInt(time_set/60);
+                            sec = time_set%60;
+                            document.getElementById('time_state').innerHTML="주차시간: " + min+ "분" + sec+"초"
+                            time_set ++;
+                            ten_seconds_count += 1
+                            if(ten_seconds_count == 10){
+                                money+=1000
+                                ten_seconds_count = 0
+                                document.getElementById('money_state').innerHTML="주차비용 : "+money+"원"
+                                //소리내는 함수 호출
+                            }
+                        }
+                       
+                    }, 1000);
+        }
+
+
+        function free_money(){
+            document.getElementById('money_state').innerHTML="주차비용 : 0 원"
+            document.getElementById('time_state').innerHTML="물건을 구매하여서 주차비용은 무료입니다."
+            time_flag=false
+        }
+
+
+
+
+
+        function car_exist(){   
+            fetch("/carnum/get")
+            .then(response=> response.text())
+            .then(data=> {
+                empty_space--;
+                time_rasie();
+                document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
+                document.getElementById(data).innerHTML="<img src = static\\images\\"+data+".png>"
+                console.log(data)
+                console.log("exist")
+            });
+
+        }
+
+        function car_not_exist(){   
+            fetch("/carnum/get")
+            .then(response=> response.text())
+            .then(data=> {
+                free_money()
+                empty_space++;
+                document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
+                document.getElementById(data).innerHTML=""
+                console.log(data)
+                console.log("notexist")
+            });
+
+        }
+
+
+        
+        setInterval(function(){
+            fetch("/distance/get")
+            .then(response=> response.text())
+            .then(data=> {
+                before_car_exist = after_car_exist
+                console.log(data)
+                console.log(before_car_exist)
+                console.log(after_car_exist)
+                if(data < 10  ){
+                    console.log("in")
+                    after_car_exist = true
+                }
+                else{
+
+                    console.log("out")
+                    after_car_exist = false
+                    
+                }
+
+            });
+
+            if (after_car_exist!= before_car_exist){
+                if (after_car_exist){
+                    car_exist()
+                }
+                else{
+                    car_not_exist()
+                }
+
+            }
+            
+        },3000);
+   
+        
+
+
+        // 인덕션의 상태를 확인하여 텍스트와 버튼이미지 수정
+        function induction_btn(){
+            fetch("/induction/state_set")      
+            .then(response=> response.text())
+            .then(state=> {
+                if(state=="induction is on"){       
+                    induction_off();
+                }else{
+                    induction_on();
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

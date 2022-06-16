@@ -1,0 +1,49 @@
+body {
+    background-color: rgb(255, 255, 255);
+}
+
+.parking_lot_container{
+    height: 100vh;
+    background-image: url('images\\parking_lot.png');
+    background-repeat: no-repeat;
+    background-position: center;
+
+    margin-top: 20px;
+}
+
+
+.state{
+    font-size:20px;
+    text-align: center;
+    border: 3px solid #73AD21;
+}  
+
+
+#parking_lot_state{
+    position:relative;
+
+}
+
+
+#car1{
+    position:absolute;
+    top: 50px;
+    left :350px;
+}
+
+.money{
+    display: inline-block;
+}
+
+
+
+#free_btn:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+
+header{
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+}
+
