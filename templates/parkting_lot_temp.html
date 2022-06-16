@@ -80,6 +80,29 @@
             time_flag=false
         }
 
+        function led_on(){
+            fetch("/led/on")                                                    /* 해당 경로 파일을 실행 */
+            .then(response=> response.text())
+            .then(data=> {
+                if(data=="led on"){  
+                    console.log('led on')
+                }else{
+                    console.log('led error')
+                }
+            });
+        }
+
+        function led_off(){
+            fetch("/led/off")                                                    /* 해당 경로 파일을 실행 */
+            .then(response=> response.text())
+            .then(data=> {
+                if(data=="led off"){  
+                    console.log('led off')
+                }else{
+                    console.log('led error')
+                }
+            });
+        }
 
 
 
@@ -91,8 +114,13 @@
                 empty_space--;
                 time_flag = true;
                 money = 0;
+                
+                time_rasie();
+                led_on()
+
                 document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
                 document.getElementById('parking_lot').src="static/images/car_exist.png";
+
                 console.log(data)
                 console.log("exist")
             });
@@ -104,10 +132,22 @@
             .then(response=> response.text())
             .then(data=> {
                 time_flag = false;
-                document.getElementById('time_state').innerHTML="주차시간 : 00분00초"
                 empty_space++;
+
+                led_off()
+
+
+                
+
+                document.getElementById('time_state').innerHTML="주차시간 : 00분00초"
                 document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
                 document.getElementById('parking_lot').src="static/images/parking_lot.png";
+                document.getElementById('money_state').innerHTML="주차비용은 "+money+"원입니다. 이용해주셔서 감사합니다!"
+
+                setTimeout(() => {
+                    document.getElementById('money_state').innerHTML="주차비용 : 0 원"
+                }, 000);
+                
                 console.log(data)
                 console.log("notexist")
             });

@@ -11,9 +11,7 @@ from flask import render_template
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
-# GPIO.setmode(GPIO.BOARD)                    #BOARD는 커넥터 pin번호 사용
-# pin=8                                       # 7번 pin. 즉, GPIO4 사용
-# GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW) 
+
 
 
 #초음파 센서 세팅
@@ -26,6 +24,11 @@ GPIO.setup(echo_pin, GPIO.IN)
 GPIO.output(trig_pin, False)
 print("Waiting for sensor to settle")
 time.sleep(2)
+
+#LED 세팅
+led_pin = 18                     #GPIO18
+GPIO.setup(led_pin, GPIO.OUT)    # LED 핀의 IN/OUT 설정
+
 
 @app.route("/")
 def home():
@@ -47,8 +50,8 @@ class Car():
     def change_distance(self, distance):
         self.carnum_distance = distance
 
-car = Car(100,100)
 
+car = Car(100,100)
 
 def distance_senser_on(carnum_distance, carnum):
     global car
@@ -118,7 +121,22 @@ def get_carnum():
         exit()
 
 
+@app.route("/led/on")                       # index.html에서 이 주소를 접속하여 해당 함수를 실행
+def led_on():
+    try:
+        GPIO.output(led_pin, GPIO.HIGH)         # 불을 켜고
+        return "led on"                         # 함수가 'ok'문자열을 반환함
+    except :
+        return "fail"
 
+
+@app.route("/led/off")
+def led_off():
+    try:
+        GPIO.output(led_pin, GPIO.LOW)
+        return "led off"
+    except :
+        return "fail"
 
 
 if __name__ == "__main__":
