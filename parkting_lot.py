@@ -5,7 +5,7 @@ import threading
 from time import sleep
 import time
 
-from flask import Flask, request
+from flask import Flask
 from flask import render_template
 
 import RPi.GPIO as GPIO
@@ -32,6 +32,7 @@ def home():
     return render_template('parkting_lot_temp.html')
 
 
+
 class Car():
     def __init__(self, carnum, carnum_distance):
         self.carnum = carnum
@@ -46,7 +47,7 @@ class Car():
     def change_distance(self, distance):
         self.carnum_distance = distance
 
-
+car = Car(100,100)
 
 
 def distance_senser_on(carnum_distance, carnum):
@@ -118,46 +119,6 @@ def get_carnum():
 
 
 
-
-
-@app.route("/induction/on")                       # index.html에서 이 주소를 접속하여 해당 함수를 실행
-def induction_on():
-    try:
-        global induction_state, induction_thread ,distance 
-        distance = 50
-        induction_state = 'on'
-        # GPIO.output(led_pin,1)   # LED ON 
-        print("인덕션 ON!")
-        return "on complet"                    
-    except :
-        return "on fail"
-
-induction_state = 'off'
-
-@app.route("/induction/state_set")                       # index.html에서 이 주소를 접속하여 해당 함수를 실행
-def induction_state_set():
-    global induction_state
-    try:
-        if induction_state == 'on':
-            print("on")
-            return "induction is on"      # 함수가 'ok'문자열을 반환함
-        else: 
-            print("off")
-            return "induction is off"  
-    except :
-        return "fail"
-
-
-@app.route("/induction/off")                       # index.html에서 이 주소를 접속하여 해당 함수를 실행
-def induction_off():
-    try:
-        global  induction_state
-        # GPIO.output(led_pin,0)   # LED ON 
-        print("인덕션 OFF!")
-        induction_state = 'off'
-        return "off complet"                        
-    except :
-        return "off fail"
 
 
 if __name__ == "__main__":
