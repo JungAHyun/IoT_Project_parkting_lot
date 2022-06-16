@@ -136,17 +136,15 @@
 
                 led_off()
 
-
-                
-
                 document.getElementById('time_state').innerHTML="주차시간 : 00분00초"
                 document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
                 document.getElementById('parking_lot').src="static/images/parking_lot.png";
-                document.getElementById('money_state').innerHTML="주차비용은 "+money+"원입니다. 이용해주셔서 감사합니다!"
+                if(money > 0)
+                    document.getElementById('money_state').innerHTML="주차비용은 "+money+"원입니다. 이용해주셔서 감사합니다!"
 
                 setTimeout(() => {
                     document.getElementById('money_state').innerHTML="주차비용 : 0 원"
-                }, 000);
+                }, 3000);
                 
                 console.log(data)
                 console.log("notexist")
