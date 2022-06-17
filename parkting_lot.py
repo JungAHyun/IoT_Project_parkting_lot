@@ -97,7 +97,6 @@ def distance_thread_start():
     # distanse_thread2.start()    #스레드 시작
 
 
-
 @app.route("/distance/get")  
 def get_distance():
     try:
@@ -108,6 +107,7 @@ def get_distance():
         # GPIO.cleanup()
         print("STOP")
         exit()
+
 
 @app.route("/carnum/get")  
 def get_carnum():

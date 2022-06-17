@@ -46,7 +46,6 @@
             .then(data=> {
                 if(data=="thread start"){                                               
                     thread_state= true;
-                }else{
                     console.log("thread fail")
                 }
             });      
@@ -62,7 +61,7 @@
                             document.getElementById('time_state').innerHTML="주차시간: " + min+ "분" + sec+"초"
                             time_set ++;
                             ten_seconds_count += 1
-                            if(ten_seconds_count == 10){
+                            if(ten_seconds_count > 10){
                                 money+=1000
                                 ten_seconds_count = 0
                                 document.getElementById('money_state').innerHTML="주차비용 : "+money+"원"
@@ -81,7 +80,7 @@
         }
 
         function led_on(){
-            fetch("/led/on")                                                    /* 해당 경로 파일을 실행 */
+            fetch("/led/on")                                                    
             .then(response=> response.text())
             .then(data=> {
                 if(data=="led on"){  
@@ -93,7 +92,7 @@
         }
 
         function led_off(){
-            fetch("/led/off")                                                    /* 해당 경로 파일을 실행 */
+            fetch("/led/off")                                                   
             .then(response=> response.text())
             .then(data=> {
                 if(data=="led off"){  
@@ -103,8 +102,6 @@
                 }
             });
         }
-
-
 
 
         function car_exist(){   
@@ -119,10 +116,8 @@
                 led_on()
 
                 document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
-                document.getElementById('parking_lot').src="static/images/car_exist.png";
+                document.getElementById('parking_lot').src="static/images/car_exist1.png";
 
-                console.log(data)
-                console.log("exist")
             });
 
         }
@@ -139,15 +134,14 @@
                 document.getElementById('time_state').innerHTML="주차시간 : 00분00초"
                 document.getElementById('parking_lot_state').innerHTML="<b>주차공간이 " + empty_space+ "자리 남았습니다.</b>"
                 document.getElementById('parking_lot').src="static/images/parking_lot.png";
-                if(money > 0)
+                
+                if(money > 0){
                     document.getElementById('money_state').innerHTML="주차비용은 "+money+"원입니다. 이용해주셔서 감사합니다!"
-
+                }
                 setTimeout(() => {
                     document.getElementById('money_state').innerHTML="주차비용 : 0 원"
                 }, 3000);
                 
-                console.log(data)
-                console.log("notexist")
             });
 
         }
@@ -186,21 +180,7 @@
             
         },500);
    
-        
 
-
-        // 인덕션의 상태를 확인하여 텍스트와 버튼이미지 수정
-        function induction_btn(){
-            fetch("/induction/state_set")      
-            .then(response=> response.text())
-            .then(state=> {
-                if(state=="induction is on"){       
-                    induction_off();
-                }else{
-                    induction_on();
-                }
-            });
-        }
 
     </script>
 </body>
